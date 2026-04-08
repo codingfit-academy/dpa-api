@@ -12,6 +12,10 @@ DB 연결 설정
 """
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()  # .env 파일 로드 (로컬 개발용)
+
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
