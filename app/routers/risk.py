@@ -22,7 +22,7 @@ from ..risk.exposure import get_exposure_window
 from ..risk.math_core import absolute_prob_from_hazard, rr_from_effects
 from ..risk.monte_carlo import monte_carlo_ci
 
-router = APIRouter(prefix="/v1/risk", tags=["risk"])
+router = APIRouter(prefix="/v1", tags=["risk"])
 
 
 # ── 행동요령(질병별) ─────────────────────────────────────────────
