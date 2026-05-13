@@ -29,6 +29,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from .database import Base, engine, get_db
 from .models import Item
+from .routers import risk as risk_router
 
 
 # ── 앱 시작 시 테이블 자동 생성 ───────────────────────────────
@@ -39,7 +40,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="Academy API", lifespan=lifespan)
+app = FastAPI(title="DPA API — 질병 확률 알리미", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -47,6 +48,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# /v1/risk, /v1/exposure, /v1/risk/timeseries 등
+app.include_router(risk_router.router)
 
 
 # ── Request / Response 스키마 ──────────────────────────────────
@@ -78,12 +82,14 @@ async def root():
 
 
 # ── 예시 CRUD (items 테이블) ───────────────────────────────────
+
+# get로 http://localhost:8000/items
 @app.get("/items", response_model=list[ItemOut])
 async def list_items(db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Item).order_by(Item.id))
     return result.scalars().all()
 
-
+# post로 http://localhost:8000/items
 @app.post("/items", response_model=ItemOut, status_code=201)
 async def create_item(body: ItemCreate, db: AsyncSession = Depends(get_db)):
     item = Item(title=body.title, content=body.content)
@@ -93,6 +99,7 @@ async def create_item(body: ItemCreate, db: AsyncSession = Depends(get_db)):
     return item
 
 
+# get으로 http://localhost:8000/items
 @app.get("/items/{item_id}", response_model=ItemOut)
 async def get_item(item_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Item).where(Item.id == item_id))

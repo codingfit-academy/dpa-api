@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import sys; sys.path.insert\\(0, '.'\\); from app.risk.effects import DISEASE_EFFECTS; from app.risk.math_core import rr_from_effects; print\\(list\\(DISEASE_EFFECTS.keys\\(\\)\\)\\); ex={'pm25':28,'o3':32,'so2':4,'asianDust':0,'ni':2.1,'covid_pressure':25}; print\\('allergy RR =', rr_from_effects\\(DISEASE_EFFECTS['allergy'], ex\\)\\)\")",
+      "Bash(python -c ' *)"
+    ]
+  }
+}
