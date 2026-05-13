@@ -22,7 +22,7 @@ from ..risk.exposure import get_exposure_window
 from ..risk.math_core import absolute_prob_from_hazard, rr_from_effects
 from ..risk.monte_carlo import monte_carlo_ci
 
-router = APIRouter(prefix="/v1", tags=["risk"])
+router = APIRouter(prefix="/v1/risk", tags=["risk"])
 
 
 # ── 행동요령(질병별) ─────────────────────────────────────────────
@@ -62,7 +62,6 @@ class RiskRequest(BaseModel):
     target_date: Optional[str] = Field(default=None, description="YYYY-MM-DD; 없으면 오늘")
     horizon_days: int = Field(default=1, ge=1, le=30)
     mc_samples: int = Field(default=2000, ge=200, le=20000)
-    taein: int = Field(default=0, ge=0, le=10)
     
 
 class StratumResult(BaseModel):
@@ -144,7 +143,6 @@ async def compute_risk(req: RiskRequest):
     exposure = await get_exposure_window(req.region_code, target, history_days=7)
     windowed: Dict[str, float] = exposure["windowed"]  # type: ignore[assignment]
     
-    print(req.taein)
 
     effects = get_effects(req.disease)
 
